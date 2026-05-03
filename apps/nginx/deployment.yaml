@@ -14,8 +14,11 @@ spec:
       labels:
         app: nginx
     spec:
+      imagePullSecrets:
+      - name: ghcr-secret
       containers:
       - name: nginx
         image: ghcr.io/quentinchirol/portfolio:sha-5dc8870
         ports:
         - containerPort: 80
+

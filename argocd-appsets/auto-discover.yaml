@@ -1,0 +1,38 @@
+# @AI_SPACE
+# @purpose : Découverte automatique des apps — 1 dossier dans apps/ = 1 app Argo CD
+# @logic   : Le generator Git scanne apps/* et crée une Application par sous-dossier.
+#            CreateNamespace=true évite de devoir créer les namespaces à la main.
+#            Le dossier _template est exclu automatiquement.
+
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: auto-discover
+  namespace: argocd
+spec:
+  generators:
+  - git:
+      repoURL: git@github.com:quentinchirol/Yush-kubernetes.git
+      revision: HEAD
+      directories:
+      - path: apps/*
+      - path: apps/_template
+        exclude: true
+  template:
+    metadata:
+      name: '{{path.basename}}'
+    spec:
+      project: default
+      source:
+        repoURL: git@github.com:quentinchirol/Yush-kubernetes.git
+        targetRevision: HEAD
+        path: '{{path}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{path.basename}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true

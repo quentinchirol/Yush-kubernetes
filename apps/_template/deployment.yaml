@@ -1,0 +1,36 @@
+# @AI_SPACE
+# @purpose : Template de base pour une nouvelle app
+# @usage   : Copier ce dossier dans apps/<nom-de-ton-app>/
+#            Remplacer toutes les occurrences de "myapp" par le nom de ton app.
+#            Supprimer les composants dont tu n'as pas besoin (database/, redis/).
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+  namespace: myapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      imagePullSecrets:
+      - name: ghcr-secret
+      containers:
+      - name: myapp
+        image: ghcr.io/quentinchirol/myapp:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: myapp-secrets
+              key: database-url
+        - name: NODE_ENV
+          value: production

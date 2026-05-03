@@ -1,0 +1,27 @@
+# @AI_SPACE
+# @purpose : Déploiement Nginx (portfolio)
+# @logic   : 2 replicas, image depuis GHCR, namespace dédié 'nginx'.
+#            Le namespace est créé automatiquement par Argo CD (CreateNamespace=true).
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      imagePullSecrets:
+      - name: ghcr-secret
+      containers:
+      - name: nginx
+        image: ghcr.io/quentinchirol/portfolio:sha-3368bb8
+        ports:
+        - containerPort: 80

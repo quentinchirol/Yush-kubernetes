@@ -1,0 +1,67 @@
+# @AI_SPACE
+# @purpose  : Configuration Argo CD (Namespace, LoadBalancer, Mot de passe, Connexion SSH GitHub)
+# @logic    : Définit les éléments requis avant ou après l'installation standard d'Argo CD.
+#             Le secret redéfinit le mot de passe de l'utilisateur 'admin' en 'admin'.
+#             La connexion au repo GitHub se fait via SSH.
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: argocd
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: argocd-server
+    app.kubernetes.io/part-of: argocd
+  name: argocd-server
+  namespace: argocd
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app.kubernetes.io/name: argocd-server
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: argocd-secret
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-secret
+    app.kubernetes.io/part-of: argocd
+type: Opaque
+stringData:
+  admin.password: "$2y$05$jokZtTGpdq3EB8LxdLS59OCQJn6hFtNxS.o802vflNTKa4H7UoIf6"
+  admin.passwordMtime: "2024-01-01T00:00:00Z"
+---
+# Connexion SSH au repo GitHub privé
+apiVersion: v1
+kind: Secret
+metadata:
+  name: yush-kubernetes-repo
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+type: Opaque
+stringData:
+  type: git
+  url: git@github.com:quentinchirol/Yush-kubernetes.git
+  sshPrivateKey: |
+    -----BEGIN OPENSSH PRIVATE KEY-----
+    b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+    QyNTUxOQAAACBWkV+ezfOOfunokUSf4B/PgXRr2L1dE2V07wDMBvSDQAAAAKC3JOtLtyTr
+    SwAAAAtzc2gtZWQyNTUxOQAAACBWkV+ezfOOfunokUSf4B/PgXRr2L1dE2V07wDMBvSDQA
+    AAAEC7cXbmfOh8kBsOB6I5wCNsXHdw+jnNb0Rp1+WfOabEMFaRX57N845+6eiRRJ/gH8+B
+    dGvYvV0TZXTvAMwG9INAAAAAG3F1ZW50aW5jaGlyb2wucHJvQGdtYWlsLmNvbQEC
+    -----END OPENSSH PRIVATE KEY-----

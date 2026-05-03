@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:1.25
+        image: ghcr.io/quentinchirol/portfolio:sha-5dc8870
         ports:
         - containerPort: 80

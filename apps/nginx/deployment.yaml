@@ -18,7 +18,7 @@ spec:
       - name: ghcr-secret
       containers:
       - name: nginx
-        image: ghcr.io/quentinchirol/portfolio:sha-836804d
+        image: ghcr.io/quentinchirol/portfolio:sha-3368bb8
         ports:
         - containerPort: 80
 

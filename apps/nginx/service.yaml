@@ -2,12 +2,13 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nginx-service
+  namespace: default
 spec:
-  # On utilise LoadBalancer pour l'exposer sur le port 80 de ton hôte Windows
-  type: LoadBalancer
+  type: NodePort
   ports:
     - port: 80
       targetPort: 80
+      nodePort: 30080
       protocol: TCP
   selector:
     app: nginx

@@ -24,4 +24,4 @@ spec:
       - name: nginx
         image: ghcr.io/quentinchirol/portfolio:sha-00c517d
         ports:
-        - containerPort: 80
+        - containerPort: 90

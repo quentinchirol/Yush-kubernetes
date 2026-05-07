@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgree
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgree
+  template:
+    metadata:
+      labels:
+        app: postgree
+    spec:
+      imagePullSecrets:
+      - name: ghcr-secret
+      containers:
+      - name: postgree
+        image: ghcr.io/quentinchirol/postgree:latest
+        ports:
+        - containerPort: 3000

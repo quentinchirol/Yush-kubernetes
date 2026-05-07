@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gametracker
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gametracker
+  template:
+    metadata:
+      labels:
+        app: gametracker
+    spec:
+      imagePullSecrets:
+      - name: ghcr-secret
+      containers:
+      - name: gametracker
+        image: ghcr.io/quentinchirol/gametracker:latest
+        ports:
+        - containerPort: 80

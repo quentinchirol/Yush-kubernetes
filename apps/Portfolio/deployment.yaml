@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: Portfolio
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: Portfolio
+  template:
+    metadata:
+      labels:
+        app: Portfolio
+    spec:
+      imagePullSecrets:
+      - name: ghcr-secret
+      containers:
+      - name: Portfolio
+        image: ghcr.io/quentinchirol/Portfolio:latest
+        ports:
+        - containerPort: 80

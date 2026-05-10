@@ -13,7 +13,7 @@ spec:
     service: portfolio
     port: 80
   replicas:
-    min: 1
+    min: 0
     max: 1
   scaledownPeriod: 1800
 ---
@@ -30,7 +30,7 @@ spec:
     targetPort: 8080
 ---
 apiVersion: networking.k8s.io/v1
-kind: Ingress
+kind: Ingress_Disabled
 metadata:
   name: portfolio
   namespace: default

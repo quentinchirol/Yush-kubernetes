@@ -1,0 +1,56 @@
+apiVersion: http.keda.sh/v1alpha1
+kind: HTTPScaledObject
+metadata:
+  name: portfolio
+  namespace: default
+spec:
+  hosts:
+  - portfolio.127.0.0.1.nip.io
+  scaleTargetRef:
+    name: portfolio
+    kind: Deployment
+    apiVersion: apps/v1
+    service: portfolio
+    port: 80
+  replicas:
+    min: 0
+    max: 1
+  scaledownPeriod: 1800
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keda-interceptor
+  namespace: default
+spec:
+  type: ExternalName
+  externalName: keda-add-ons-http-interceptor-proxy.keda.svc.cluster.local
+  ports:
+  - port: 8080
+    targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: portfolio
+  namespace: default
+  annotations:
+    cert-manager.io/cluster-issuer: selfsigned-issuer
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+spec:
+  tls:
+  - hosts:
+    - portfolio.127.0.0.1.nip.io
+    secretName: portfolio-tls
+  rules:
+  - host: portfolio.127.0.0.1.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: keda-interceptor
+            port:
+              number: 8080

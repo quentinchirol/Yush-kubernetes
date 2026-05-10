@@ -30,7 +30,7 @@ spec:
     targetPort: 8080
 ---
 apiVersion: networking.k8s.io/v1
-kind: Ingress_Disabled
+kind: Ingress_Disabled_Disabled
 metadata:
   name: portfolio
   namespace: default

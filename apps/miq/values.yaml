@@ -1,0 +1,26 @@
+project: miq
+global:
+  domain: 127.0.0.1.nip.io
+components:
+  db:
+    type: database
+    image: ghcr.io/quentinchirol/miq:latest
+  redis:
+    type: cache
+    image: ghcr.io/quentinchirol/miq:latest
+  backend:
+    type: worker
+    image: ghcr.io/quentinchirol/miq:latest
+  frontend:
+    type: web
+    image: ghcr.io/quentinchirol/miq:latest
+    public: true
+  worker:
+    type: worker
+    image: ghcr.io/quentinchirol/miq:latest
+  postgres_data:
+    type: database
+    image: ghcr.io/quentinchirol/miq:latest
+  miq_data:
+    type: worker
+    image: ghcr.io/quentinchirol/miq:latest

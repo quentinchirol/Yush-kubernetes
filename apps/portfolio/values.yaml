@@ -1,0 +1,9 @@
+﻿project: portfolio
+global:
+  domain: 127.0.0.1.nip.io
+components:
+  web:
+    type: web
+    image: nginx:alpine
+    public: true
+    port: 80

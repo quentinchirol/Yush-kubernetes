@@ -1,0 +1,17 @@
+{{- range $name, $config := .Values.components }}
+{{- if ne $config.type "worker" }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $name }}
+  labels:
+    app: {{ $name }}
+spec:
+  ports:
+    - port: {{ if eq $config.type "database" }}5432{{ else if eq $config.type "cache" }}6379{{ else }}80{{ end }}
+      targetPort: {{ if eq $config.type "database" }}5432{{ else if eq $config.type "cache" }}6379{{ else }}80{{ end }}
+  selector:
+    app: {{ $name }}
+{{- end }}
+{{- end }}

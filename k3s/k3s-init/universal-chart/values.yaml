@@ -1,0 +1,25 @@
+# @AI_SPACE
+# @purpose : Valeurs par défaut pour le blueprint universel.
+# @logic   : Chaque clé sous 'components' définit un service K8S complet.
+
+project: default-project
+
+components:
+  # Exemple de structure attendue :
+  # web:
+  #   type: web
+  #   image: nginx:alpine
+  #   public: true
+  #   links: [api]
+  # api:
+  #   type: worker
+  #   image: my-api:latest
+  # db:
+  #   type: database
+  #   image: postgres:15-alpine
+  #   size: 1Gi
+
+# Configuration globale partagée
+global:
+  domain: 127.0.0.1.nip.io
+  registrySecret: ghcr-secret

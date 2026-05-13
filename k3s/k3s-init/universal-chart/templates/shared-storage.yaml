@@ -1,0 +1,20 @@
+{{- $hasShared := false }}
+{{- range $name, $config := .Values.components }}
+  {{- if $config.shared }}
+    {{- $hasShared = true }}
+  {{- end }}
+{{- end }}
+
+{{- if $hasShared }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.project }}-shared-data
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+{{- end }}

@@ -1,0 +1,60 @@
+{{- range $name, $config := .Values.components }}
+---
+apiVersion: {{ if eq $config.type "database" }}apps/v1{{ else }}apps/v1{{ end }}
+kind: {{ if eq $config.type "database" }}StatefulSet{{ else }}Deployment{{ end }}
+metadata:
+  name: {{ $name }}
+  labels:
+    app: {{ $name }}
+    project: {{ $.Values.project }}
+spec:
+  {{- if eq $config.type "database" }}
+  serviceName: {{ $name }}
+  {{- end }}
+  replicas: {{ $config.replicas | default 1 }}
+  selector:
+    matchLabels:
+      app: {{ $name }}
+  template:
+    metadata:
+      labels:
+        app: {{ $name }}
+    spec:
+      imagePullSecrets:
+        - name: {{ $.Values.global.registrySecret | default "ghcr-secret" }}
+      containers:
+        - name: {{ $name }}
+          image: {{ $config.image }}
+          ports:
+            - containerPort: {{ if eq $config.type "database" }}5432{{ else if eq $config.type "cache" }}6379{{ else }}80{{ end }}
+          env:
+            {{- include "universal.envLinks" (dict "root" $ "links" $config.links) | nindent 12 }}
+            {{- range $k, $v := $config.env }}
+            - name: {{ $k }}
+              value: {{ $v | quote }}
+            {{- end }}
+          {{- if $config.shared }}
+          volumeMounts:
+            {{- range $config.shared }}
+            - name: shared-storage
+              mountPath: {{ .mount | default "/data" }}
+            {{- end }}
+          {{- end }}
+      {{- if $config.shared }}
+      volumes:
+        - name: shared-storage
+          persistentVolumeClaim:
+            claimName: {{ $.Values.project }}-shared-data
+      {{- end }}
+
+{{- if eq $config.type "database" }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: {{ $config.size | default "1Gi" }}
+{{- end }}
+{{- end }}

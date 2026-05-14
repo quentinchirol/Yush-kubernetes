@@ -1,0 +1,26 @@
+project: miq
+global:
+  domain: 127.0.0.1.nip.io
+components:
+  db:
+    type: database
+    image: postgres:16-alpine
+    dockerfile: Dockerfile
+  redis:
+    type: cache
+    image: redis:7-alpine
+    dockerfile: Dockerfile
+  backend:
+    type: web
+    image: ghcr.io/quentinchirol/miq-backend:latest
+    public: true
+    dockerfile: backend/Dockerfile
+  frontend:
+    type: web
+    image: ghcr.io/quentinchirol/miq-frontend:latest
+    public: true
+    dockerfile: Dockerfile.frontend
+  worker:
+    type: worker
+    image: ghcr.io/quentinchirol/miq-worker:latest
+    dockerfile: backend/worker/Dockerfile

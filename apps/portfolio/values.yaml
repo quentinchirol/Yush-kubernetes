@@ -1,9 +1,0 @@
-project: portfolio
-global:
-  domain: 127.0.0.1.nip.io
-components:
-  portfolio:
-    type: web
-    image: ghcr.io/quentinchirol/portfolio-portfolio:latest
-    public: true
-    dockerfile: Dockerfile

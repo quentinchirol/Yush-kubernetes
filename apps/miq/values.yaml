@@ -7,6 +7,10 @@ components:
     type: database
     image: postgres:16-alpine
     dockerfile: Dockerfile
+    env:
+      POSTGRES_USER: miq
+      POSTGRES_PASSWORD: miq-password
+      POSTGRES_DB: miq
   redis:
     type: cache
     image: redis:7-alpine

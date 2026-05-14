@@ -7,6 +7,10 @@ metadata:
   labels:
     app: {{ $name }}
     project: {{ $.Values.project }}
+  {{- if $.Values.global.repoUrl }}
+  annotations:
+    deployer/repo-url: {{ $.Values.global.repoUrl }}
+  {{- end }}
 spec:
   {{- if eq $config.type "database" }}
   serviceName: {{ $name }}
